@@ -2,11 +2,87 @@
 
 ## Deploy locally with docker-compose
 
-1.
+1. Run `yarn workspace backend build` (builds both backend and frontend)
+1. Run `yarn build-image`
+1. Create docker-compose.yml with a single backend service
+
+   ```yaml
+   version: '3'
+   services:
+     backstage:
+       image: backstage
+       ports:
+         - '7007:7007'
+   ```
+
+1. Start it with `docker-compose up`
 
 ## Switch to PostgreSQL
 
-1.
+1. Add `pg` as a dependency in `packages/backend/package.json`
+
+   ```diff
+    "dependencies": {
+   +  "pg": "^8.3.0",
+   ```
+
+1. Run `yarn install` to update `yarn.lock`
+
+1. Updating docker-compose.yaml with postgres service
+
+   ```diff
+    backstage:
+      image: backstage
+      ports:
+        - '7007:7007'
+   +  environment:
+   +    POSTGRES_PASSWORD: postgres
+   +
+   +  db:
+   +   image: postgres
+   +   environment:
+   +     POSTGRES_USER: postgres
+   +     POSTGRES_PASSWORD: postgres
+   ```
+
+1. Updating app-config.production.yaml
+
+   ```diff
+    app:
+      # Should be the same as backend.baseUrl when using the `app-backend` plugin
+      baseUrl: http://localhost:7007
+
+    backend:
+      baseUrl: http://localhost:7007
+      listen:
+        port: 7007
+
+   +  database:
+   +    client: pg
+   +    connection:
+   +      host: db
+   +      port: 5432
+   +      user: postgres
+   +      password: ${POSTGRES_PASSWORD}
+   ```
+
+1. Update Dockerfile to copy `app-config.production.yaml` into image:
+
+   ```diff
+   -COPY packages/backend/dist/bundle.tar.gz app-config.yaml ./
+   +COPY packages/backend/dist/bundle.tar.gz app-config.yaml app-config.production.yaml ./
+   ```
+
+1. Update Dockerfile to use `app-config.production.yaml`:
+
+   ```diff
+   -CMD ["node", "packages/backend", "--config", "app-config.yaml"]
+   +CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+   ```
+
+1. Run `yarn workspace backend build` (builds both backend and frontend)
+1. Run `yarn build-image`
+1. Start it with `docker-compose up`
 
 ## Enable GitHub backend integration with PAT
 

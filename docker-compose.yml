@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backstage:
+    image: backstage
+    ports:
+      - '7007:7007'
+    environment:
+      POSTGRES_PASSWORD: postgres
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres

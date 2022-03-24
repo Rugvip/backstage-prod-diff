@@ -6,3 +6,11 @@ backend:
   baseUrl: http://localhost:7007
   listen:
     port: 7007
+
+  database:
+    client: pg
+    connection:
+      host: db
+      port: 5432
+      user: postgres
+      password: ${POSTGRES_PASSWORD}
