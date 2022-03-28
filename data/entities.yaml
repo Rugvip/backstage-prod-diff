@@ -1,0 +1,32 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: artist
+spec:
+  owner: user:guest
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: artist
+spec:
+  type: website
+  lifecycle: production
+  owner: user:guest
+  system: artist
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: artist
+spec:
+  type: grpc
+  lifecycle: production
+  owner: user:guest
+  system: artist
+  definition: |
+    message Wut {};
+    service {
+      method Wut(Wut) Wut;
+    }
