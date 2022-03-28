@@ -4,6 +4,8 @@ services:
     image: backstage
     ports:
       - '7007:7007'
+    depends_on:
+      - db
     environment:
       POSTGRES_PASSWORD: postgres
 

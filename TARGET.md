@@ -12,9 +12,9 @@
 
 - Set up GitHub OAuth App for sign-in with demo resolver
 
-- Get the scaffolder plugin running with one custom template in GitHub
-
 - Define 3 custom mock entities in GitHub + register them manually
+
+- Get the scaffolder plugin running with one custom template in GitHub
 
 ## Production Hardened Deployment
 
