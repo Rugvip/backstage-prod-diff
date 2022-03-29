@@ -202,11 +202,21 @@
 1. Find docs that reference `yarn backstage-cli create-github-app` <!-- TODO: copyable command -->
 1. Try to create app for user, be confused by 404 and no sign-in <!-- TODO: some way to create app for user? -->
 1. Copy paste the $include line from https://backstage.io/docs/plugins/github-apps#including-in-integrations-config but it needs to be rewritten <!-- TODO: Clarify that tne file name is just an example in there, perhaps even make the CLI print out the exact instruction? -->
-1. X
+1. Add the app credentials to the production configuration
 
-## Switch to GitHub discovery provider
+## Switch to GitHub discovery provider <!-- TODO: this doesn't exist -->
 
-1.
+1. Find the docs under integrations
+1. Install the package in packages/backend, get confused by not being instructed to add `@backstage/integration` too
+1. Copy imports code into places as per the documentation
+1. Copy setup code into places as per the documentation
+1. Install `@backstage/integration`
+1. Start configuring, but note that it tells you to set a GITHUB_TOKEN even though we're using an app instead
+
+    ```yaml
+    - type: github-discovery
+      target: https://github.com/Rugvip/backstage-*/blob/-/catalog-info.yaml
+    ```
 
 ## Add GitHub org ingestion + sign-in resolver
 
