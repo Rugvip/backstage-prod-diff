@@ -176,6 +176,7 @@
 
 ## Define 3 custom mock entities in GitHub + register them manually
 
+1. Get rid of the example locations from `app-config.yaml`
 1. Be in a world of pain trying to figure out the format, mostly based on https://backstage.io/docs/features/software-catalog/descriptor-format
 1. Also figure out how to define a System
 1. Also figure out how to define an API
