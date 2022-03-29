@@ -219,7 +219,7 @@
      target: https://github.com/Rugvip/backstage-*/blob/-/catalog-info.yaml
    ```
 
-## Add GitHub org ingestion + sign-in resolver
+## Add GitHub org ingestion
 
 <!-- TODO: Remove addendum at https://backstage.io/docs/integrations/github/org -->
 
@@ -239,6 +239,15 @@
 1. Fail to set up scheduling, called `frobs.run()` instead of the provider
    <!-- TODO: No feedback when scheduled task fails -->
    <!-- TODO: Signal handler for node process to exit quickly in docker -->
+
+## Switch to GitHub sign-in resolver
+
+1. Find in the docs at https://backstage.io/docs/auth/identity-resolver
+1. No existing example using `result` for information not in ProfileInfo. Source code lookup required
+1. Add missing imports for `DEFAULT_NAMESPACE` and `stringifyEntityRef`.
+1. Ownership not working, had to debug by inspecting token <!-- TODO: Add users/ownership information somewhere -->
+<!-- TODO: Docs on debugging, inspecting token, etc. -->
+1. Figure out that GitHub profile `.id` is numerical, switch to `username`
 
 ## Switch to OAuth2Proxy + proxy auth provider
 

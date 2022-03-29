@@ -1,4 +1,8 @@
 import {
+  DEFAULT_NAMESPACE,
+  stringifyEntityRef,
+} from '@backstage/catalog-model';
+import {
   createRouter,
   createGithubProvider,
 } from '@backstage/plugin-auth-backend';
@@ -17,15 +21,26 @@ export default async function createPlugin(
     providerFactories: {
       github: createGithubProvider({
         signIn: {
-          resolver: async (_result, ctx) => {
-            // Issue the token containing the entity claims
-            const token = await ctx.tokenIssuer.issueToken({
-              claims: {
-                sub: 'user:default/guest',
-                ent: ['user:default/guest'],
-              },
+          resolver: async ({ result }, ctx) => {
+            if (!result.fullProfile.username) {
+              throw new Error('Username missing sir');
+            }
+            const userEntityRef = stringifyEntityRef({
+              kind: 'User',
+              namespace: DEFAULT_NAMESPACE,
+              name: result.fullProfile.username,
             });
-            return { id: 'guest', token };
+            // Resolve group membership from the Backstage catalog
+            const fullEnt =
+              await ctx.catalogIdentityClient.resolveCatalogMembership({
+                // resolveCatalogOwnership?
+                entityRefs: [userEntityRef],
+                logger: ctx.logger,
+              });
+            const token = await ctx.tokenIssuer.issueToken({
+              claims: { sub: userEntityRef, ent: fullEnt },
+            });
+            return { id: '', token };
           },
         },
       }),
