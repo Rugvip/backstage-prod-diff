@@ -199,7 +199,10 @@
 
 ## Switch to GitHub App for integration
 
-1.
+1. Find docs that reference `yarn backstage-cli create-github-app` <!-- TODO: copyable command -->
+1. Try to create app for user, be confused by 404 and no sign-in <!-- TODO: some way to create app for user? -->
+1. Copy paste the $include line from https://backstage.io/docs/plugins/github-apps#including-in-integrations-config but it needs to be rewritten <!-- TODO: Clarify that tne file name is just an example in there, perhaps even make the CLI print out the exact instruction? -->
+1. X
 
 ## Switch to GitHub discovery provider
 

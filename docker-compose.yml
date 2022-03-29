@@ -14,6 +14,7 @@ services:
     volumes:
       - ./app-config.yaml:/app/app-config.yaml
       - ./app-config.production.yaml:/app/app-config.production.yaml
+      - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
 
   db:
     image: postgres
