@@ -11,6 +11,9 @@ services:
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
       AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
+    volumes:
+      - ./app-config.yaml:/app/app-config.yaml
+      - ./app-config.production.yaml:/app/app-config.production.yaml
 
   db:
     image: postgres
