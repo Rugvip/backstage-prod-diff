@@ -8,6 +8,9 @@ services:
       - db
     environment:
       POSTGRES_PASSWORD: postgres
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
+      AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
 
   db:
     image: postgres
