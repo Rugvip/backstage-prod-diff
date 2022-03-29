@@ -191,7 +191,9 @@
 
 ## Get the scaffolder plugin running with one custom template in GitHub
 
-1.
+1. Copy example template to repo
+1. Push to GitHub, add to app-config.yaml locations
+1. Token had wrong scope, replace PAT with one that has access
 
 ---
 
