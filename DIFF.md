@@ -251,7 +251,32 @@
 
 ## Switch to OAuth2Proxy + proxy auth provider
 
-1.
+1. Read docs at https://backstage.io/docs/auth/oauth2-proxy/provider
+1. Setup oauth2proxy in front of Backstage
+1. Finds Docker image at qaaaay
+1. Set up new GitHub OAuth2 client
+1. Add OAuth proxy service to compose:
+
+   ```yaml
+   proxy:
+     container_name: oauth2-proxy
+     image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
+     command: >-
+       --upstream=http://backstage:7007
+       --set-authorization-header=true
+       --provider=github
+       --client-id=${PROXY_GITHUB_CLIENT_ID}
+       --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
+       --http-address=0.0.0.0:4180
+       --redirect-url=http://localhost:7007/oauth2/callback
+       --cookie-secret=${PROXY_COOKIE_SECRET}
+       --cookie-secure=false
+       --email-domain=*
+
+     hostname: oauth2-proxy
+     ports:
+       - 7007:4180/tcp
+   ```
 
 ## Split scaffolder and catalog into separate backends
 
