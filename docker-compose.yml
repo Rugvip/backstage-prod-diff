@@ -26,6 +26,18 @@ services:
       - ./app-config.production.yaml:/app/app-config.production.yaml
       - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
 
+  scaffolder:
+    image: backstage-scaffolder
+    depends_on:
+      - db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    # GITHUB_TOKEN: ${GITHUB_TOKEN}
+    volumes:
+      - ./app-config.scaffolder.yaml:/app/app-config.yaml
+      - ./app-config.production.yaml:/app/app-config.production.yaml
+      - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
+
   db:
     image: postgres
     environment:

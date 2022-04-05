@@ -22,12 +22,7 @@ import {
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
-import app from './plugins/app';
-import auth from './plugins/auth';
 import scaffolder from './plugins/scaffolder';
-import proxy from './plugins/proxy';
-// import techdocs from './plugins/techdocs';
-import search from './plugins/search';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 
@@ -35,13 +30,13 @@ class CustomDiscovery implements PluginEndpointDiscovery {
   constructor(private readonly delegate: PluginEndpointDiscovery) {}
 
   async getBaseUrl(pluginId: string): Promise<string> {
-    if (pluginId === 'catalog') {
-      return `http://catalog:7007/api/catalog`;
-    }
     if (pluginId === 'scaffolder') {
-      return `http://scaffolder:7007/api/scaffolder`;
+      return this.delegate.getBaseUrl(pluginId);
     }
-    return this.delegate.getBaseUrl(pluginId);
+    if (pluginId === 'catalog') {
+      return 'http://catalog:7007/api/catalog';
+    }
+    return `http://backstage:7007/api/${pluginId}`;
   }
 
   async getExternalBaseUrl(pluginId: string): Promise<string> {
@@ -91,26 +86,16 @@ async function main() {
   const createEnv = makeCreateEnv(config);
 
   const scaffolderEnv = useHotMemoize(module, () => createEnv('scaffolder'));
-  const authEnv = useHotMemoize(module, () => createEnv('auth'));
-  const proxyEnv = useHotMemoize(module, () => createEnv('proxy'));
-  // const techdocsEnv = useHotMemoize(module, () => createEnv('techdocs'));
-  const searchEnv = useHotMemoize(module, () => createEnv('search'));
-  const appEnv = useHotMemoize(module, () => createEnv('app'));
 
   const apiRouter = Router();
   apiRouter.use('/scaffolder', await scaffolder(scaffolderEnv));
-  apiRouter.use('/auth', await auth(authEnv));
-  // apiRouter.use('/techdocs', await techdocs(techdocsEnv));
-  apiRouter.use('/proxy', await proxy(proxyEnv));
-  apiRouter.use('/search', await search(searchEnv));
 
   // Add backends ABOVE this line; this 404 handler is the catch-all fallback
   apiRouter.use(notFoundHandler());
 
   const service = createServiceBuilder(module)
     .loadConfig(config)
-    .addRouter('/api', apiRouter)
-    .addRouter('', await app(appEnv));
+    .addRouter('/api', apiRouter);
 
   await service.start().catch(err => {
     console.log(err);

@@ -33,6 +33,9 @@ class CustomDiscovery implements PluginEndpointDiscovery {
     if (pluginId === 'catalog') {
       return this.delegate.getBaseUrl(pluginId);
     }
+    if (pluginId === 'scaffolder') {
+      return `http://scaffolder:7007/api/scaffolder`;
+    }
     return `http://backstage:7007/api/${pluginId}`;
   }
 

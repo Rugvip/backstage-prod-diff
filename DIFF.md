@@ -410,3 +410,9 @@
 
 1. Forgot to import `PluginEndpointDiscovery`, fix
 1. Configure proxy to route `/api/catalog/` to the catalog backend
+
+### Scaffolder split
+
+1. Repeat all of the above for the scaffolder
+1. Update discovery implementation in `packages/backend/src/index.ts`
+1. Update discovery implementation in `packages/backend-catalog/src/index.ts`

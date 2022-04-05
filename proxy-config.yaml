@@ -14,6 +14,9 @@ upstreamConfig:
     - id: catalog
       path: /api/catalog/
       uri: http://catalog:7007
+    - id: scaffolder
+      path: /api/scaffolder/
+      uri: http://scaffolder:7007
     - id: httpbin
       path: '^/httpbin/(.*)$'
       rewriteTarget: '/$1'

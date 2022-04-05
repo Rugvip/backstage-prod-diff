@@ -1,0 +1,10 @@
+
+integrations:
+  github:
+    - host: github.com
+      apps:
+        - $include: github-app-backstage-prod-diff-credentials.yaml
+
+proxy: null
+techdocs: null
+auth: null
