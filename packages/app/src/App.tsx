@@ -25,7 +25,11 @@ import { entityPage } from './components/catalog/EntityPage';
 import { searchPage } from './components/search/SearchPage';
 import { Root } from './components/Root';
 
-import { AlertDisplay, OAuthRequestDialog } from '@backstage/core-components';
+import {
+  AlertDisplay,
+  OAuthRequestDialog,
+  ProxiedSignInPage,
+} from '@backstage/core-components';
 import { createApp } from '@backstage/app-defaults';
 import { FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
@@ -59,9 +63,12 @@ const app = createApp({
     });
   },
   components: {
-    SignInPage: props => (
-      <SignInPage {...props} auto provider={githubProvider} />
-    ),
+    SignInPage: props => {
+      if (process.env.NODE_ENV === 'development') {
+        return <SignInPage {...props} auto provider={githubProvider} />;
+      }
+      return <ProxiedSignInPage {...props} provider="oauth2proxy" />;
+    },
   },
 });
 

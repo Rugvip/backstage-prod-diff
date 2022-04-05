@@ -253,7 +253,6 @@
 
 1. Read docs at https://backstage.io/docs/auth/oauth2-proxy/provider
 1. Setup oauth2proxy in front of Backstage
-1. Finds Docker image at qaaaay
 1. Set up new GitHub OAuth2 client
 1. Add OAuth proxy service to compose:
 
@@ -277,6 +276,12 @@
      ports:
        - 7007:4180/tcp
    ```
+
+1. Copy over example auth provider setup at https://backstage.io/docs/auth/oauth2-proxy/provider
+1. Add oauth2 provider, copy resolver and change it slightly.
+1. switch out signInPage
+1. figure out that this does not run in local development.
+1. Add production/dev check for the signInPage.
 
 ## Split scaffolder and catalog into separate backends
 

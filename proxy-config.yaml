@@ -1,0 +1,24 @@
+# injectRequestHeaders:
+# - name: X-OAUTH2-PROXY-ID-TOKEN
+#   values:
+#   - claim: id_token
+#     prefix: "Bearer "
+
+server:
+  BindAddress: 0.0.0.0:4180
+
+upstreamConfig:
+  upstreams:
+    - id: backstage
+      path: /
+      uri: http://backstage:7007
+    - id: httpbin
+      path: '^/httpbin/(.*)$'
+      rewriteTarget: '/$1'
+      uri: http://httpbin
+
+providers:
+  - id: github
+    provider: github
+    clientId: ae98713801ffb8135fab
+    clientSecretFile: /proxy-client-secret-credentials.yaml

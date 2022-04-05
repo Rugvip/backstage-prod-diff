@@ -60,6 +60,7 @@ auth:
   # see https://backstage.io/docs/auth/ to learn about auth providers
   environment: development
   providers:
+    oauth2proxy: {}
     github:
       development:
         clientId: ${AUTH_GITHUB_CLIENT_ID}
@@ -79,6 +80,5 @@ catalog:
       target: https://github.com/Rugvip/backstage-prod-diff/blob/master/data/template/template.yaml
       rules:
       - allow: [Template]
-
     - type: github-discovery
       target: https://github.com/Rugvip/backstage-*/blob/-/catalog-info.yaml

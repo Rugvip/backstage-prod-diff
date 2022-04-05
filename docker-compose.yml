@@ -13,6 +13,7 @@ services:
       - ./app-config.yaml:/app/app-config.yaml
       - ./app-config.production.yaml:/app/app-config.production.yaml
       - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
+      - './node_modules/@backstage/plugin-auth-backend/dist/index.cjs.js:/app/node_modules/@backstage/plugin-auth-backend/dist/index.cjs.js'
 
   db:
     image: postgres
@@ -20,20 +21,30 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
 
+  httpbin:
+    image: kennethreitz/httpbin:latest
+
   proxy:
     container_name: oauth2-proxy
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
     command: >-
-      --upstream=http://backstage:7007
-      --set-authorization-header=true
-      --provider=github
-      --client-id=${PROXY_GITHUB_CLIENT_ID}
-      --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
-      --http-address=0.0.0.0:4180
       --redirect-url=http://localhost:7007/oauth2/callback
       --cookie-secret=${PROXY_COOKIE_SECRET}
       --cookie-secure=false
       --email-domain=*
+
+      --http-address=0.0.0.0:4180
+      --provider=github
+      --client-id=${PROXY_GITHUB_CLIENT_ID}
+      --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
+      --set-authorization-header=true
+      --upstream=http://httpbin
+
+    # --upstream=http://backstage:7007
+    # --alpha-config=/proxy-config.yaml
+    volumes:
+      - './proxy-config.yaml:/proxy-config.yaml'
+      - './proxy-client-secret-credentials.yaml:/proxy-client-secret-credentials.yaml'
 
     hostname: oauth2-proxy
     ports:
