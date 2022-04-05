@@ -60,10 +60,7 @@ export default async function createPlugin(
         },
         signIn: {
           resolver: async ({ result }, ctx) => {
-            console.log('DEBUG: result =', result);
-            console.log('DEBUG: result.headers =', result.headers);
-            const id = result.headers['x-forwarded-user'];
-            console.log('DEBUG: id =', id);
+            const id = (result.fullProfile as any).sub;
             if (!id) {
               throw new Error('Username missing sir');
             }

@@ -32,16 +32,16 @@ services:
       --cookie-secret=${PROXY_COOKIE_SECRET}
       --cookie-secure=false
       --email-domain=*
+      --alpha-config=/proxy-config.yaml
 
-      --http-address=0.0.0.0:4180
-      --provider=github
-      --client-id=${PROXY_GITHUB_CLIENT_ID}
-      --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
-      --set-authorization-header=true
-      --upstream=http://httpbin
+    # --http-address=0.0.0.0:4180
+    # --provider=github
+    # --client-id=${PROXY_GITHUB_CLIENT_ID}
+    # --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
+    # --set-authorization-header=true
+    # --upstream=http://httpbin
 
     # --upstream=http://backstage:7007
-    # --alpha-config=/proxy-config.yaml
     volumes:
       - './proxy-config.yaml:/proxy-config.yaml'
       - './proxy-client-secret-credentials.yaml:/proxy-client-secret-credentials.yaml'

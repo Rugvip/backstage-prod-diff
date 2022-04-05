@@ -278,10 +278,69 @@
    ```
 
 1. Copy over example auth provider setup at https://backstage.io/docs/auth/oauth2-proxy/provider
-1. Add oauth2 provider, copy resolver and change it slightly.
-1. switch out signInPage
-1. figure out that this does not run in local development.
-1. Add production/dev check for the signInPage.
+1. Add oauth2 provider, copy resolver
+1. Modify the sign-in resolver to "work" with GitHub - spoiler, it doesn't
+1. Switch out `SignInPage`, using `NODE_ENV` to select:
+
+   ```tsx
+   SignInPage: props => <ProxiedSignInPage {...props} provider="oauth2proxy" />;
+   ```
+
+1. Figure out that this does not run in local development.
+1. Add production/dev check for the `SignInPage`:
+
+   ```tsx
+   SignInPage: props => {
+     if (process.env.NODE_ENV === 'development') {
+       return <SignInPage {...props} auto provider={githubProvider} />;
+     }
+     return <ProxiedSignInPage {...props} provider="oauth2proxy" />;
+   },
+   ```
+
+1. Back to the OAuth2Proxy setup, realize that we need an additional proxy in between to rewrite headers, since OAuth2Proxy always embeds it in the Authorization header.
+1. Create alpha configuration that remaps to a header:
+
+   ```yaml
+   injectRequestHeaders:
+     - name: X-OAUTH2-PROXY-ID-TOKEN
+       values:
+         - value: QmVhcmVyIGUzMC5leUp6ZFdJaU9pSlNkV2QyYVhBaWZRLmUzMA==
+
+   server:
+     BindAddress: 0.0.0.0:4180
+
+   upstreamConfig:
+     upstreams:
+       - id: backstage
+         path: /
+         uri: http://backstage:7007
+       - id: httpbin
+         path: '^/httpbin/(.*)$'
+         rewriteTarget: '/$1'
+         uri: http://httpbin
+
+   providers:
+     - id: github
+       provider: github
+       clientId: ae98713801ffb8135fab
+       clientSecretFile: /proxy-client-secret-credentials.yaml
+   ```
+
+1. Switch over to using the new alpha configuration in docker-compose.
+
+   ```yaml
+   command: >-
+     --redirect-url=http://localhost:7007/oauth2/callback
+     --cookie-secret=${PROXY_COOKIE_SECRET}
+     --cookie-secure=false
+     --email-domain=*
+     --alpha-config=/proxy-config.yaml
+   ```
+
+1. Realize that the auth result only contain the GitHub id token meaning the resolver have no method for identifying the user out of the box.
+1. Set up and use httpbin to actually be able to troubleshoot this.
+1. Leave this as a hardcoded token for now to be unblocked, but for GitHub this setup is incomplete and there is no way to properly set things up. <!-- TODO: FIX THIS -->
 
 ## Split scaffolder and catalog into separate backends
 

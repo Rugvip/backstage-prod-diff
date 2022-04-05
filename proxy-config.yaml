@@ -1,8 +1,7 @@
-# injectRequestHeaders:
-# - name: X-OAUTH2-PROXY-ID-TOKEN
-#   values:
-#   - claim: id_token
-#     prefix: "Bearer "
+injectRequestHeaders:
+- name: X-OAUTH2-PROXY-ID-TOKEN
+  values:
+  - value: QmVhcmVyIGUzMC5leUp6ZFdJaU9pSlNkV2QyYVhBaWZRLmUzMA==
 
 server:
   BindAddress: 0.0.0.0:4180
@@ -22,3 +21,8 @@ providers:
     provider: github
     clientId: ae98713801ffb8135fab
     clientSecretFile: /proxy-client-secret-credentials.yaml
+
+
+# {}.{"sub":"Rugvip"}.{}
+# Bearer e30.eyJzdWIiOiJSdWd2aXAifQ.e30
+# QmVhcmVyIGUzMC5leUp6ZFdJaU9pSlNkV2QyYVhBaWZRLmUzMA==
