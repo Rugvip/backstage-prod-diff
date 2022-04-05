@@ -18,6 +18,7 @@ import {
   SingleHostDiscovery,
   UrlReaders,
   ServerTokenManager,
+  PluginEndpointDiscovery,
 } from '@backstage/backend-common';
 import { TaskScheduler } from '@backstage/backend-tasks';
 import { Config } from '@backstage/config';
@@ -30,10 +31,25 @@ import search from './plugins/search';
 import { PluginEnvironment } from './types';
 import { ServerPermissionClient } from '@backstage/plugin-permission-node';
 
+class CustomDiscovery implements PluginEndpointDiscovery {
+  constructor(private readonly delegate: PluginEndpointDiscovery) {}
+
+  async getBaseUrl(pluginId: string): Promise<string> {
+    if (pluginId === 'catalog') {
+      return `http://catalog:7007/api/catalog`;
+    }
+    return this.delegate.getBaseUrl(pluginId);
+  }
+
+  async getExternalBaseUrl(pluginId: string): Promise<string> {
+    return this.delegate.getExternalBaseUrl(pluginId);
+  }
+}
+
 function makeCreateEnv(config: Config) {
   const root = getRootLogger();
   const reader = UrlReaders.default({ logger: root, config });
-  const discovery = SingleHostDiscovery.fromConfig(config);
+  const discovery = new CustomDiscovery(SingleHostDiscovery.fromConfig(config));
   const cacheManager = CacheManager.fromConfig(config);
   const databaseManager = DatabaseManager.fromConfig(config);
   const tokenManager = ServerTokenManager.noop();

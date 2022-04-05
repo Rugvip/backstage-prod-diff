@@ -11,6 +11,9 @@ upstreamConfig:
     - id: backstage
       path: /
       uri: http://backstage:7007
+    - id: catalog
+      path: /api/catalog/
+      uri: http://catalog:7007
     - id: httpbin
       path: '^/httpbin/(.*)$'
       rewriteTarget: '/$1'

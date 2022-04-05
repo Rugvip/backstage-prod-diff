@@ -362,7 +362,51 @@
 
 1. Duplicate the `backstage` service in `docker-compose.yaml` with appropriate config
 1. Update the `build-image` script in `packages/backend-catalog/package.json`
-1. Create new `app-config.catalog.yaml` with catalog specific config
+1. Create new `app-config.catalog.yaml` with catalog specific config <!-- TODO: this is painful -->
 1. Mount new config in the catalog service
 1. Realize the the `backend-catalog` dockerfile builds the wrong thing - update Dockerfile
 1. Update `.dockerignore` to not ignore `packages/backend-catalog`
+
+### routing
+
+1. Write up a custom discovery implementation
+
+   ```ts
+   class CustomDiscovery implements PluginEndpointDiscovery {
+     constructor(private readonly delegate: PluginEndpointDiscovery) {}
+
+     async getBaseUrl(pluginId: string): Promise<string> {
+       if (pluginId === 'catalog') {
+         return `http://catalog:7007/api/catalog`;
+       }
+       return this.delegate.getBaseUrl(pluginId);
+     }
+
+     async getExternalBaseUrl(pluginId: string): Promise<string> {
+       return this.delegate.getExternalBaseUrl(pluginId);
+     }
+   }
+   ```
+
+1. Hook up the new discovery implementation
+1. Copy over and tweak the custom discovery implementation to backend-catalog
+
+   ```ts
+   class CustomDiscovery implements PluginEndpointDiscovery {
+     constructor(private readonly delegate: PluginEndpointDiscovery) {}
+
+     async getBaseUrl(pluginId: string): Promise<string> {
+       if (pluginId === 'catalog') {
+         return this.delegate.getBaseUrl(pluginId);
+       }
+       return `http://backstage:7007/api/${pluginId}`;
+     }
+
+     async getExternalBaseUrl(pluginId: string): Promise<string> {
+       return this.delegate.getExternalBaseUrl(pluginId);
+     }
+   }
+   ```
+
+1. Forgot to import `PluginEndpointDiscovery`, fix
+1. Configure proxy to route `/api/catalog/` to the catalog backend
