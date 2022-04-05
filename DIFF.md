@@ -344,4 +344,16 @@
 
 ## Split scaffolder and catalog into separate backends
 
-1.
+1. Copy `packages/backend` -> `packages/backend-catalog`
+1. Update `"name"` in `packages/backend-catalog/package.json`
+1. Clean up `"dependencies"` in `packages/backend-catalog/package.json`
+1. Deleted `@backstage/plugin-scaffolder-backend` by mistake, restore
+1. Delete all plugin setups in `packages/backend-catalog/src/plugins` except for `catalog.ts`
+1. Delete a few more dependencies, like `app` and `dockerode`.
+1. Remove all other plugin setups from `packages/backend-catalog/src/index.ts`
+1. Clean up imports in `packages/backend-catalog/src/index.ts`
+1. Delete catalog setup from main backend `packages/backend/src/plugins/catalog.ts`
+1. Remove catalog from main backend `packages/backend/src/index.ts`
+1. Remove catalog dependency from main backend `packages/backend/package.json`
+1. Realize that catalog-backend is still needed by search
+1. Realize that catalog-model is still needed by auth resolver
