@@ -199,8 +199,9 @@
 
 ## Switch to GitHub App for integration
 
-1. Find docs that reference `yarn backstage-cli create-github-app` <!-- TODO: copyable command -->
-<!-- TODO: Recommend creation of demo org if needed -->
+1. Find docs that reference `yarn backstage-cli create-github-app`
+   <!-- TODO: copyable command -->
+   <!-- TODO: Recommend creation of demo org if needed -->
 1. Try to create app for user, be confused by 404 and no sign-in <!-- TODO: some way to create app for user? -->
 1. Copy paste the $include line from https://backstage.io/docs/plugins/github-apps#including-in-integrations-config but it needs to be rewritten <!-- TODO: Clarify that tne file name is just an example in there, perhaps even make the CLI print out the exact instruction? -->
 1. Add the app credentials to the production configuration
@@ -223,30 +224,31 @@
 
 <!-- TODO: Remove addendum at https://backstage.io/docs/integrations/github/org -->
 
-1. Stuck because there are no docs
-1. Add permission on existing app
-<!-- TODO: We should really have an interactive cli when creating the Github app so you can select permissions for what you want the github app to do-->
+1.  Stuck because there are no docs
+1.  Add permission on existing app
+    <!-- TODO: We should really have an interactive cli when creating the Github app so you can select permissions for what you want the github app to do-->
 
-- Go to the developer settings for the Github App
-- Add the extra permission
+    - Go to the developer settings for the Github App
+    - Add the extra permission
 
-1. Go to installation and approve the adjusted permission changes
-1. Create and add `GitHubOrgEntityProvider`
-1. Add missing import for `GitHubOrgEntityProvider`
-1. Set up scheduling of said provider with `env.scheduler.scheduleTask`
-1. Add import for `Duration`
-1. Install missing Luxon dependency
-1. Fail to set up scheduling, called `frobs.run()` instead of the provider
-   <!-- TODO: No feedback when scheduled task fails -->
-   <!-- TODO: Signal handler for node process to exit quickly in docker -->
+1.  Go to installation and approve the adjusted permission changes
+1.  Create and add `GitHubOrgEntityProvider`
+1.  Add missing import for `GitHubOrgEntityProvider`
+1.  Set up scheduling of said provider with `env.scheduler.scheduleTask`
+1.  Add import for `Duration`
+1.  Install missing Luxon dependency
+1.  Fail to set up scheduling, called `frobs.run()` instead of the provider
+    <!-- TODO: No feedback when scheduled task fails -->
+    <!-- TODO: Signal handler for node process to exit quickly in docker -->
 
 ## Switch to GitHub sign-in resolver
 
 1. Find in the docs at https://backstage.io/docs/auth/identity-resolver
 1. No existing example using `result` for information not in ProfileInfo. Source code lookup required
 1. Add missing imports for `DEFAULT_NAMESPACE` and `stringifyEntityRef`.
-1. Ownership not working, had to debug by inspecting token <!-- TODO: Add users/ownership information somewhere -->
-<!-- TODO: Docs on debugging, inspecting token, etc. -->
+1. Ownership not working, had to debug by inspecting token
+   <!-- TODO: Add users/ownership information somewhere -->
+   <!-- TODO: Docs on debugging, inspecting token, etc. -->
 1. Figure out that GitHub profile `.id` is numerical, switch to `username`
 
 ## Switch to OAuth2Proxy + proxy auth provider
