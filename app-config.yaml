@@ -68,17 +68,3 @@ auth:
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
-
-catalog:
-  import:
-    entityFilename: catalog-info.yaml
-    pullRequestBranchName: backstage-integration
-  rules:
-    - allow: [Component, System, API, Group, User, Resource, Location]
-  locations:
-    - type: url
-      target: https://github.com/Rugvip/backstage-prod-diff/blob/master/data/template/template.yaml
-      rules:
-      - allow: [Template]
-    - type: github-discovery
-      target: https://github.com/Rugvip/backstage-*/blob/-/catalog-info.yaml

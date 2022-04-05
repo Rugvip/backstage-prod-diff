@@ -13,7 +13,18 @@ services:
       - ./app-config.yaml:/app/app-config.yaml
       - ./app-config.production.yaml:/app/app-config.production.yaml
       - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
-      - './node_modules/@backstage/plugin-auth-backend/dist/index.cjs.js:/app/node_modules/@backstage/plugin-auth-backend/dist/index.cjs.js'
+
+  catalog:
+    image: backstage-catalog
+    depends_on:
+      - db
+    environment:
+      POSTGRES_PASSWORD: postgres
+    # GITHUB_TOKEN: ${GITHUB_TOKEN}
+    volumes:
+      - ./app-config.catalog.yaml:/app/app-config.yaml
+      - ./app-config.production.yaml:/app/app-config.production.yaml
+      - ./github-app-backstage-prod-diff-credentials.yaml:/app/github-app-backstage-prod-diff-credentials.yaml
 
   db:
     image: postgres

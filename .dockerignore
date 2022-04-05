@@ -2,4 +2,5 @@
 node_modules
 packages
 !packages/backend/dist
+!packages/backend-catalog/dist
 plugins

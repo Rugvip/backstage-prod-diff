@@ -16,7 +16,7 @@ WORKDIR /app
 # Copy repo skeleton first, to avoid unnecessary docker cache invalidation.
 # The skeleton contains the package.json of each package in the monorepo,
 # and along with yarn.lock and the root package.json, that's enough to run yarn install.
-COPY yarn.lock package.json packages/backend/dist/skeleton.tar.gz ./
+COPY yarn.lock package.json packages/backend-catalog/dist/skeleton.tar.gz ./
 RUN tar xzf skeleton.tar.gz && rm skeleton.tar.gz
 
 # install sqlite3 dependencies
@@ -34,7 +34,7 @@ RUN apt-get update && \
 RUN yarn install --frozen-lockfile --production --network-timeout 300000 && rm -rf "$(yarn cache dir)"
 
 # Then copy the rest of the backend bundle, along with any other files we might want.
-COPY packages/backend/dist/bundle.tar.gz app-config.yaml app-config.production.yaml ./
+COPY packages/backend-catalog/dist/bundle.tar.gz app-config.yaml app-config.production.yaml ./
 RUN tar xzf bundle.tar.gz && rm bundle.tar.gz
 
-CMD ["node", "packages/backend", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]
+CMD ["node", "packages/backend-catalog", "--config", "app-config.yaml", "--config", "app-config.production.yaml"]

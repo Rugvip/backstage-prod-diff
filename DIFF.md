@@ -357,3 +357,12 @@
 1. Remove catalog dependency from main backend `packages/backend/package.json`
 1. Realize that catalog-backend is still needed by search
 1. Realize that catalog-model is still needed by auth resolver
+
+### deployment setup
+
+1. Duplicate the `backstage` service in `docker-compose.yaml` with appropriate config
+1. Update the `build-image` script in `packages/backend-catalog/package.json`
+1. Create new `app-config.catalog.yaml` with catalog specific config
+1. Mount new config in the catalog service
+1. Realize the the `backend-catalog` dockerfile builds the wrong thing - update Dockerfile
+1. Update `.dockerignore` to not ignore `packages/backend-catalog`
