@@ -1,0 +1,23 @@
+#!/usr/bin/env docker-compose -f
+
+version: '3'
+services:
+  backstage:
+    image: backstage
+    ports:
+      - '7007:7007'
+    depends_on:
+      - db
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      AUTH_GITHUB_CLIENT_ID: ${AUTH_GITHUB_CLIENT_ID}
+      AUTH_GITHUB_CLIENT_SECRET: ${AUTH_GITHUB_CLIENT_SECRET}
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
