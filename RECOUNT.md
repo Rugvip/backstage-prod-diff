@@ -114,45 +114,39 @@
 
 ## Define 3 custom mock entities in GitHub + register them manually
 
+<!-- Maybe add COPY examples to Dockerfile? -->
 <!-- Figure out how to improve relative file locations so that they are more intuitive. Create a lightweight RFC to gather feedback -->
 
-1. [ ] Be in a world of pain trying to figure out the format, mostly based on https://backstage.io/docs/features/software-catalog/descriptor-format
-1. [ ] Also figure out how to define a System
-1. [ ] Also figure out how to define an API
-1. [ ] Also figure out entity refs and how they work - need to say `user:guest` for example, now also have to read https://backstage.io/docs/features/software-catalog/references
-1. [ ] git commit && git push
-1. [ ] Click create component
-1. [ ] Click Register Existing component
-1. [ ] Paste URL to file(s) containing entities.
-1. [ ] Click Analyze
-1. [ ] Forget to add a `definition` to the API entity, fix that
-1. [ ] Click Import
+1. [x] Copy examples/entities.yaml to to data/entities.yaml
+1. [x] Also figure out entity refs and how they work - need to say `user:guest` for example, now also have to read https://backstage.io/docs/features/software-catalog/references
+1. [x] git commit && git push
+1. [x] Click create component
+1. [x] Click Register Existing component
+1. [x] Paste URL to file(s) containing entities.
+1. [x] Click Analyze
+1. [x] Click Import
 
 ## Get the scaffolder plugin running with one custom template in GitHub
 
-1. [ ] Copy example template to repo
-1. [ ] Push to GitHub, add to app-config.yaml locations
-1. [ ] Token had wrong scope, replace PAT with one that has access
+<!-- TODO: Add empty catalog.locations block to app-config.production.yaml -->
+
+1. [x] Copy example template to repo
+1. [x] Push to GitHub, add to app-config.yaml locations
 
 ---
 
 ## Switch to GitHub App for integration
 
-1. [ ] Find docs that reference `yarn backstage-cli create-github-app`
-   <!-- TODO: copyable command -->
-   <!-- TODO: Recommend creation of demo org if needed -->
-1. [ ] Try to create app for user, be confused by 404 and no sign-in <!-- TODO: some way to create app for user? -->
-1. [ ] Copy paste the $include line from https://backstage.io/docs/plugins/github-apps#including-in-integrations-config but it needs to be rewritten <!-- TODO: Clarify that tne file name is just an example in there, perhaps even make the CLI print out the exact instruction? -->
-1. [ ] Add the app credentials to the production configuration
+1. [x] Find docs that reference `yarn backstage-cli create-github-app`
+1. [x] Add the app credentials to the production configuration. Note: needs to be added to Dockerfile, but we don't count that
 
 ## Switch to GitHub discovery provider <!-- TODO: this doesn't exist -->
 
-1. [ ] Find the docs under integrations
-1. [ ] Install the package in packages/backend, get confused by not being instructed to add `@backstage/integration` too
-1. [ ] Copy imports code into places as per the documentation
-1. [ ] Copy setup code into places as per the documentation
-1. [ ] Install `@backstage/integration`
-1. [ ] Start configuring, but note that it tells you to set a GITHUB_TOKEN even though we're using an app instead
+1. [x] Find the docs under integrations
+1. [x] Install the package in packages/backend
+1. [x] Copy imports code into places as per the documentation
+1. [x] Copy setup code into places as per the documentation
+1. [x] Start configuring, but note that it tells you to set a GITHUB_TOKEN even though we're using an app instead
 
    ```yaml
    - type: github-discovery
@@ -161,49 +155,38 @@
 
 ## Add GitHub org ingestion
 
-<!-- TODO: Remove addendum at https://backstage.io/docs/integrations/github/org -->
+1. [x]  Create and add `GitHubOrgEntityProvider`, according to https://backstage.io/docs/integrations/github/org
+1. [x]  Add missing import for `GitHubOrgEntityProvider`
 
-1. [ ]  Stuck because there are no docs
-1. [ ]  Add permission on existing app
-    <!-- TODO: We should really have an interactive cli when creating the Github app so you can select permissions for what you want the github app to do-->
+<!-- TODO: Add org members read permission to the GitHub app CLI -->
 
-    - Go to the developer settings for the Github App
-    - Add the extra permission
+<!-- TODO: Something might've gone wrong with the scheduling, we didn't see it running initially -->
 
-1. [ ]  Go to installation and approve the adjusted permission changes
-1. [ ]  Create and add `GitHubOrgEntityProvider`
-1. [ ]  Add missing import for `GitHubOrgEntityProvider`
-1. [ ]  Set up scheduling of said provider with `env.scheduler.scheduleTask`
-1. [ ]  Add import for `Duration`
-1. [ ]  Install missing Luxon dependency
-1. [ ]  Fail to set up scheduling, called `frobs.run()` instead of the provider
-    <!-- TODO: No feedback when scheduled task fails -->
-    <!-- TODO: Signal handler for node process to exit quickly in docker -->
+<!-- TODO: Signal handler for node process to exit quickly in docker -->
 
 ## Switch to GitHub sign-in resolver
 
-1. [ ] Find in the docs at https://backstage.io/docs/auth/identity-resolver
-1. [ ] No existing example using `result` for information not in ProfileInfo. Source code lookup required
-1. [ ] Add missing imports for `DEFAULT_NAMESPACE` and `stringifyEntityRef`.
-1. [ ] Ownership not working, had to debug by inspecting token
-   <!-- TODO: Add users/ownership information somewhere -->
-   <!-- TODO: Docs on debugging, inspecting token, etc. -->
-1. [ ] Figure out that GitHub profile `.id` is numerical, switch to `username`
+<!-- TODO: Make it easier to find the built-in resolvers in the docs -->
+
+1. [x] Find in the docs at https://backstage.io/docs/auth/identity-resolver
+1. [x] Add built-in GitHub resolver: `providers.github.resolvers.usernameMatchingUserEntityName`
+
+<!-- TODO: Add users/ownership information somewhere in the frontend -->
+
+<!-- TODOish: See if we can clean up https://backstage.io/docs/reference/plugin-auth-backend.providers -->
 
 ## Switch to OAuth2Proxy + proxy auth provider
 
-1. [ ] Read docs at https://backstage.io/docs/auth/oauth2-proxy/provider
-1. [ ] Setup oauth2proxy in front of Backstage
-1. [ ] Set up new GitHub OAuth2 client
-1. [ ] Add OAuth proxy service to compose:
+1. [x] Read docs at https://backstage.io/docs/auth/oauth2-proxy/provider
+1. [x] Setup oauth2proxy in front of Backstage
+1. [x] Set up new GitHub OAuth2 client
+1. [x] Add OAuth proxy service to compose:
 
    ```yaml
    proxy:
-     container_name: oauth2-proxy
      image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
      command: >-
        --upstream=http://backstage:7007
-       --set-authorization-header=true
        --provider=github
        --client-id=${PROXY_GITHUB_CLIENT_ID}
        --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
@@ -213,75 +196,21 @@
        --cookie-secure=false
        --email-domain=*
 
-     hostname: oauth2-proxy
      ports:
-       - 7007:4180/tcp
+       - 7007:4180/tcp # remove/switch backend port
    ```
 
-1. [ ] Copy over example auth provider setup at https://backstage.io/docs/auth/oauth2-proxy/provider
-1. [ ] Add oauth2 provider, copy resolver
-1. [ ] Modify the sign-in resolver to "work" with GitHub - spoiler, it doesn't
-1. [ ] Switch out `SignInPage`, using `NODE_ENV` to select:
+<!-- TODO: Fix oauth2Proxy casing -->
 
-   ```tsx
-   SignInPage: props => <ProxiedSignInPage {...props} provider="oauth2proxy" />;
-   ```
+<!-- TODOish: Fix logout for proxy providers -->
 
-1. [ ] Figure out that this does not run in local development.
-1. [ ] Add production/dev check for the `SignInPage`:
+1. [x] Copy over example auth provider config at https://backstage.io/docs/auth/oauth2-proxy/provider
+1. [x] Add oauth2 provider, copy resolver
 
-   ```tsx
-   SignInPage: props => {
-     if (process.env.NODE_ENV === 'development') {
-       return <SignInPage {...props} auto provider={githubProvider} />;
-     }
-     return <ProxiedSignInPage {...props} provider="oauth2proxy" />;
-   },
-   ```
+<!-- TODOish: stronger encouragement to head to proxy sign-in page docs -->
 
-1. [ ] Back to the OAuth2Proxy setup, realize that we need an additional proxy in between to rewrite headers, since OAuth2Proxy always embeds it in the Authorization header.
-1. [ ] Create alpha configuration that remaps to a header:
-
-   ```yaml
-   injectRequestHeaders:
-     - name: X-OAUTH2-PROXY-ID-TOKEN
-       values:
-         - value: QmVhcmVyIGUzMC5leUp6ZFdJaU9pSlNkV2QyYVhBaWZRLmUzMA==
-
-   server:
-     BindAddress: 0.0.0.0:4180
-
-   upstreamConfig:
-     upstreams:
-       - id: backstage
-         path: /
-         uri: http://backstage:7007
-       - id: httpbin
-         path: '^/httpbin/(.*)$'
-         rewriteTarget: '/$1'
-         uri: http://httpbin
-
-   providers:
-     - id: github
-       provider: github
-       clientId: ae98713801ffb8135fab
-       clientSecretFile: /proxy-client-secret-credentials.yaml
-   ```
-
-1. [ ] Switch over to using the new alpha configuration in docker-compose.
-
-   ```yaml
-   command: >-
-     --redirect-url=http://localhost:7007/oauth2/callback
-     --cookie-secret=${PROXY_COOKIE_SECRET}
-     --cookie-secure=false
-     --email-domain=*
-     --alpha-config=/proxy-config.yaml
-   ```
-
-1. [ ] Realize that the auth result only contain the GitHub id token meaning the resolver have no method for identifying the user out of the box.
-1. [ ] Set up and use httpbin to actually be able to troubleshoot this.
-1. [ ] Leave this as a hardcoded token for now to be unblocked, but for GitHub this setup is incomplete and there is no way to properly set things up. <!-- TODO: FIX THIS -->
+1. [x] Copy over sign-in page setup from https://backstage.io/docs/auth/#sign-in-with-proxy-providers
+1. [x] Switch out google example setup for oauth2proxy:
 
 ## Split scaffolder and catalog into separate backends
 

@@ -39,3 +39,17 @@ catalog:
       target: https://github.com/Rugvip/backstage-prod-diff/blob/master/recount/data/template/template.yaml
       rules:
       - allow: [Template]
+
+    # - type: github-discovery
+    #   target: https://github.com/blamdemo/*/blob/-/catalog-info.yaml
+
+integrations:
+  github:
+    - host: github.com
+      apps:
+        - $include: github-app-backstage-prod-diff-recount-credentials.yaml
+
+auth:
+  environment: production
+  providers:
+    oauth2proxy: {}

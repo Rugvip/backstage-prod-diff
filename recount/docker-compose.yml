@@ -5,7 +5,7 @@ services:
   backstage:
     image: backstage
     ports:
-      - '7007:7007'
+      - '7008:7007'
     depends_on:
       - db
     environment:
@@ -21,3 +21,20 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+
+  proxy:
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.2.1
+    command: >-
+      --upstream=http://backstage:7007
+      --provider=github
+      --client-id=${PROXY_GITHUB_CLIENT_ID}
+      --client-secret=${PROXY_GITHUB_CLIENT_SECRET}
+      --http-address=0.0.0.0:4180
+      --redirect-url=http://localhost:7007/oauth2/callback
+      --cookie-secret=${PROXY_COOKIE_SECRET}
+      --cookie-secure=false
+      --email-domain=*
+
+    hostname: oauth2-proxy
+    ports:
+      - 7007:4180/tcp

@@ -37,23 +37,33 @@ import { FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { PermissionedRoute } from '@backstage/plugin-permission-react';
 import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
-import { githubAuthApiRef } from '@backstage/core-plugin-api';
+import {
+  configApiRef,
+  githubAuthApiRef,
+  useApi,
+} from '@backstage/core-plugin-api';
+import { ProxiedSignInPage } from '@backstage/core-components';
 
 const app = createApp({
   apis,
   components: {
-    SignInPage: props => (
-      <SignInPage
-        {...props}
-        auto
-        provider={{
-          id: 'github-auth-provider',
-          title: 'GitHub',
-          message: 'Sign in using GitHub',
-          apiRef: githubAuthApiRef,
-        }}
-      />
-    ),
+    SignInPage: props => {
+      const configApi = useApi(configApiRef);
+      if (configApi.getString('auth.environment') === 'development') {
+        return (
+          <SignInPage
+            {...props}
+            provider={{
+              id: 'github-auth-provider',
+              title: 'GitHub',
+              message: 'Sign in using GitHub',
+              apiRef: githubAuthApiRef,
+            }}
+          />
+        );
+      }
+      return <ProxiedSignInPage {...props} provider="oauth2proxy" />;
+    },
   },
   bindRoutes({ bind }) {
     bind(catalogPlugin.externalRoutes, {

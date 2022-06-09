@@ -28,12 +28,26 @@ export default async function createPlugin(
       //   https://backstage.io/docs/auth/identity-resolver
       github: providers.github.create({
         signIn: {
-          resolver(_, ctx) {
-            return ctx.issueToken({
-              claims: {
-                sub: 'user:default/guest',
-                ent: ['user:default/guest'],
-              },
+          resolver: providers.github.resolvers.usernameMatchingUserEntityName(),
+          // resolver(_, ctx) {
+          //   return ctx.issueToken({
+          //     claims: {
+          //       sub: 'user:default/guest',
+          //       ent: ['user:default/guest'],
+          //     },
+          //   });
+          // },
+        },
+      }),
+      oauth2proxy: providers.oauth2Proxy.create({
+        signIn: {
+          async resolver({ result }, ctx) {
+            const name = result.getHeader('x-forwarded-user');
+            if (!name) {
+              throw new Error('Request did not contain a user');
+            }
+            return ctx.signInWithCatalogUser({
+              entityRef: { name },
             });
           },
         },
